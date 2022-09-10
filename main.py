@@ -1,3 +1,5 @@
+import os, sys
+from kivy.resources import resource_add_path, resource_find
 from styling import *
 from classes import *
 from kivy.lang import Builder
@@ -14,4 +16,7 @@ class LoveCalculator(MDApp, MainPage):
         return screen
 
 
-LoveCalculator().run()
+if __name__ == '__main__':
+    if hasattr(sys, '_MEIPASS'):
+        resource_add_path(os.path.join(sys._MEIPASS))
+    LoveCalculator().run()

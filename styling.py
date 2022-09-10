@@ -18,7 +18,7 @@ ScreenManager:
 
     FitImage:  # Background
         id: bg_image
-        source: "images/bg.png"
+        source: "media/bg.png"
         size_hint_y: 1
         radius: 0, 0, 0, 0
         
