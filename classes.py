@@ -5,8 +5,7 @@ from kivy.uix.screenmanager import Screen
 
 info = "1. Input fields will only accept characters A-Z as valid input. \n \n" \
        "2. API usage may be limited for high traffic accounts. \n \n" \
-       "3. If you encounter an error, Please reference the Error code in your email. \n \n " \
-       "4. I take no credibility for being a home wrecker."
+       "3. If you encounter an error, Please reference the Error code in your feedback."
 
 
 class MainPage(Screen):
@@ -40,8 +39,7 @@ class MainPage(Screen):
             self.reset_input_field()
             error_code_1 = MDDialog(title=f"Invalid Name Entered \n Error Code(1)",
                                     text=f"No user input was registered for the first input field,"
-                                         f" Please enter a valid input and try again. \n\n"
-                                         f"if the error persists, contact <test@test.com>",
+                                         f" Please enter a valid input and try again.",
                                     buttons=[MDFlatButton(text="Close",
                                                           on_release=lambda _: error_code_1.dismiss())])
 
@@ -51,8 +49,7 @@ class MainPage(Screen):
             self.reset_input_field()
             error_code_2 = MDDialog(title=f"Invalid Name Entered \n Error Code(2)",
                                     text=f"First input field contains special characters, "
-                                         f" Please enter a valid input and try again."
-                                         f" \n\n if the error persists, contact <test@test.com>",
+                                         f" Please enter a valid input and try again.",
                                     buttons=[MDFlatButton(text="Close",
                                                           on_release=lambda _: error_code_2.dismiss())])
             return error_code_2.open()
@@ -61,8 +58,7 @@ class MainPage(Screen):
             self.reset_input_field()
             error_code_3 = MDDialog(title=f"Invalid Name Entered \n Error Code(3)",
                                     text=f"No user input was registered for secondary input field, "
-                                         f" Please enter a valid input and try again. \n\n"
-                                         f"if the error persists, contact <test@test.com>",
+                                         f" Please enter a valid input and try again. \n\n",
                                     buttons=[MDFlatButton(text="Close",
                                                           on_release=lambda _: error_code_3.dismiss())])
             return error_code_3.open()
@@ -71,8 +67,7 @@ class MainPage(Screen):
             self.reset_input_field()
             error_code_4 = MDDialog(title=f"Invalid Name Entered \n Error Code(4)",
                                     text=f"Secondary edit field contains special characters,"
-                                         f" Please enter a valid input and try again. \n\n"
-                                         f"if the error persists, contact <test@test.com>",
+                                         f" Please enter a valid input and try again. \n\n",
                                     buttons=[MDFlatButton(text="Close",
                                                           on_release=lambda _: error_code_4.dismiss())])
             return error_code_4.open()
