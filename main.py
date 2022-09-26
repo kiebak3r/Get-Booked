@@ -6,7 +6,7 @@ from kivy.lang import Builder
 from kivymd.app import MDApp
 
 
-class LoveCalculator(MDApp, MainPage):
+class GetBooked(MDApp, MainPage):
 
     def build(self):
         self.theme_cls.theme_style = 'Light'
@@ -19,4 +19,4 @@ class LoveCalculator(MDApp, MainPage):
 if __name__ == '__main__':
     if hasattr(sys, '_MEIPASS'):
         resource_add_path(os.path.join(sys._MEIPASS))
-    LoveCalculator().run()
+    GetBooked().run()
