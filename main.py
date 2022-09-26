@@ -6,7 +6,12 @@ from kivy.lang import Builder
 from kivymd.app import MDApp
 
 
-class GetBooked(MDApp, MainPage):
+class GetBooked(
+
+                MDApp, SignIn, SignUp,
+                Profile
+
+                ):
 
     def build(self):
         self.theme_cls.theme_style = 'Light'
