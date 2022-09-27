@@ -23,7 +23,7 @@ ScreenManager:
     
     MDFloatLayout:
         ElementCard:
-            image: "media/avatar1.png"
+            image: "media/logo.png"
                                          
     MDLabel: 
         text: "catchy slogan here.."
@@ -113,7 +113,7 @@ ScreenManager:
         icon_right_color: app.theme_cls.primary_color
         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         size_hint_x: .8
-        max_text_length: 8
+        max_text_length: 10
         multiline: False
     
     MDTextField:
@@ -123,7 +123,7 @@ ScreenManager:
         icon_right_color: app.theme_cls.primary_color
         pos_hint: {'center_x': 0.5, 'center_y': 0.4}
         size_hint_x: .8
-        max_text_length: 8
+        max_text_length: 10
         multiline: False
     
     MDRectangleFlatIconButton:
@@ -212,6 +212,12 @@ ScreenManager:
         theme_icon_color: "Custom"
         icon_color: "red"
         on_release: root.manager.current = "sign_in"
+    
+    MDTextButton:
+        text: "Delete account"
+        font_style: "Subtitle2"
+        pos_hint: {'center_x': 0.5, 'center_y': 0.15}
+        on_press: app.delete_account()
 
 
 <ElementCard@MDCard>
