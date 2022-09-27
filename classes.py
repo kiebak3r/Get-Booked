@@ -45,6 +45,7 @@ class SignIn(Screen):
 
             try:
                 if self.root.get_screen('sign_in').ids.password.text == query[0]:
+                    self.root.get_screen('profile').ids.display_name.text = f"{username}'s Profile"
                     self.reset_input_field()
                     self.root.current = "profile"
 

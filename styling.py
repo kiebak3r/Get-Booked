@@ -169,7 +169,8 @@ ScreenManager:
             image: "media/avatar1.png"
 
     MDLabel: 
-        text: "Add Username"
+        id: display_name
+        text: "placeholder"
         font_style: "H5"
         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         halign: "center"
@@ -190,7 +191,7 @@ ScreenManager:
 
     MDRectangleFlatIconButton:
         text: " My Messages"
-        icon: "message"
+        icon: "message-processing-outline"
         pos_hint: {'center_x': 0.5, 'center_y': 0.3}
         size_hint_x: None
         theme_text_color: "Custom"
