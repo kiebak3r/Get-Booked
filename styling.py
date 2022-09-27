@@ -44,6 +44,7 @@ ScreenManager:
         
     MDTextField:
         id: password
+        password: True
         hint_text: "Password"
         icon_right: "lock"
         icon_right_color: app.theme_cls.primary_color
@@ -109,6 +110,7 @@ ScreenManager:
         
     MDTextField:
         id: new_password
+        password: True
         hint_text: "Choose a password"
         icon_right: "lock"
         icon_right_color: app.theme_cls.primary_color
@@ -119,6 +121,7 @@ ScreenManager:
     
     MDTextField:
         id: new_password_confirm
+        password: True
         hint_text: "Confirm your password"
         icon_right: "alert-circle-check"
         icon_right_color: app.theme_cls.primary_color

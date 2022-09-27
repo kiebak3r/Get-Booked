@@ -8,15 +8,25 @@ from kivy.uix.screenmanager import Screen
 database = 'getbooked.db'
 
 
+
 class Profile(Screen):
     def delete_account(self):
+        global delete
         delete = MDDialog(
                     title=f"Account Deletion",
                     text=f"Are you sure you would like to delete your account?",
                     buttons=[MDFlatButton(text="No", on_release=lambda _: delete.dismiss()),
-                             MDFlatButton(text="Yes", on_release=lambda _: "")])
+                             MDFlatButton(text="Yes", on_release=lambda _: self.delete_flow())])
 
         return delete.open()
+
+    def delete_flow(self):
+        delete.dismiss()
+        self.root.current = 'sign_in'
+        conn = sqlite3.connect(database)
+        cursor = conn.cursor()
+        cursor.execute(f'DELETE FROM users WHERE username = "{username}" ')
+        conn.commit()
 
 
 class SignIn(Screen):
@@ -25,6 +35,7 @@ class SignIn(Screen):
         self.root.get_screen('sign_in').ids.password.text = ""
 
     def user_login_lookup(self):
+        global username
         username = self.root.get_screen('sign_in').ids.username.text
 
         if len(username) > 14:
@@ -103,7 +114,7 @@ class SignUp(Screen):
 
             return username_error.open()
 
-        elif any(char in string.punctuation for char in username):
+        elif any(char in string.punctuation for char in username) or " " in username:
             self.root.get_screen('sign_up').ids.new_username.text = ""
             spec_char_error = MDDialog(
                 title=f"Invalid Credentials \n Error Code (9)",
