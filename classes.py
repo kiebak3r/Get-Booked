@@ -89,7 +89,7 @@ class SignUp(Screen):
         conn = sqlite3.connect(database)
         cursor = conn.cursor()
         try:
-            cursor.execute(f"INSERT INTO users (username) VALUES ('{username}')")
+            cursor.execute(f"INSERT INTO users (username, password) VALUES ('{username}', '{password}')")
 
         except sqlite3.IntegrityError:
             self.root.get_screen('sign_up').ids.new_username.text = ""
