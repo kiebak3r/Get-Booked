@@ -83,21 +83,35 @@ class SignUp(Screen):
         password = self.root.get_screen('sign_up').ids.new_password.text
         confirm_password = self.root.get_screen('sign_up').ids.new_password_confirm.text
 
-        if password == confirm_password:
-            pass
+        if len(username) > 14:
+            username_error = MDDialog(
+                title=f"Invalid Credentials \n Error Code (8)",
+                text=f"The username entered exceeds 14 characters, please try again.",
+                buttons=[MDFlatButton(text="Close", on_release=lambda _: username_error.dismiss())])
 
-        conn = sqlite3.connect(database)
-        cursor = conn.cursor()
-        try:
-            cursor.execute(f"INSERT INTO users (username, password) VALUES ('{username}', '{password}')")
+            return username_error.open()
 
-        except sqlite3.IntegrityError:
-            self.root.get_screen('sign_up').ids.new_username.text = ""
-            duplicate_username_error = MDDialog(
-                title=f"Invalid Username \n Error Code (6)",
-                text=f"The username selected is not available Please select a new username and try again.",
-                buttons=[MDFlatButton(text="Close", on_release=lambda _: duplicate_username_error.dismiss())])
+        elif any(char in string.punctuation for char in username):
+            spec_char_error = MDDialog(
+                title=f"Invalid Credentials \n Error Code (9)",
+                text="The username cannot contain special characters, please try again.",
+                buttons=[MDFlatButton(text="Close", on_release=lambda _: spec_char_error.dismiss())])
 
-            return duplicate_username_error.open()
+            return spec_char_error.open()
 
-        conn.commit(), conn.close()
+        elif len(username) > 2 and password == confirm_password:
+            conn = sqlite3.connect(database)
+            cursor = conn.cursor()
+
+            try:
+                cursor.execute(f"INSERT INTO users (username, password) VALUES ('{username}', '{password}')")
+                conn.commit(), conn.close()
+
+            except sqlite3.IntegrityError:
+                self.root.get_screen('sign_up').ids.new_username.text = ""
+                duplicate_username_error = MDDialog(
+                    title=f"Invalid Username \n Error Code (10)",
+                    text=f"The username selected is not available Please select a new username and try again.",
+                    buttons=[MDFlatButton(text="Close", on_release=lambda _: duplicate_username_error.dismiss())])
+
+                return duplicate_username_error.open()
