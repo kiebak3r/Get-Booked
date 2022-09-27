@@ -15,7 +15,7 @@ class GetBooked(
 
     def build(self):
         self.theme_cls.theme_style = 'Light'
-        self.theme_cls.primary_palette = 'Red'
+        self.theme_cls.primary_palette = 'Gray'
         self.theme_cls.primary_hue = 'A700'
         screen = Builder.load_string(styling)
         return screen

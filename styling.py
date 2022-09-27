@@ -49,6 +49,7 @@ ScreenManager:
         icon_right_color: app.theme_cls.primary_color
         pos_hint: {'center_x': 0.5, 'center_y': 0.3}
         size_hint_x: .8
+        max_text_length: 10
         multiline: False
     
     MDRectangleFlatIconButton:
@@ -59,7 +60,7 @@ ScreenManager:
         text_color: "black"
         line_color: "black"
         theme_icon_color: "Custom"
-        icon_color: "red"
+        icon_color: "black"
         on_release: app.user_login_lookup()
     
     MDTextButton:
@@ -134,7 +135,7 @@ ScreenManager:
         text_color: "black"
         line_color: "black"
         theme_icon_color: "Custom"
-        icon_color: "red"
+        icon_color: "black"
         on_release: app.add_user_to_database()
     
         
@@ -188,7 +189,7 @@ ScreenManager:
         text_color: "black"
         line_color: "black"
         theme_icon_color: "Custom"
-        icon_color: "red"
+        icon_color: "black"
 
     MDRectangleFlatIconButton:
         text: " My Messages"
@@ -199,7 +200,7 @@ ScreenManager:
         text_color: "black"
         line_color: "black"
         theme_icon_color: "Custom"
-        icon_color: "red"
+        icon_color: "black"
     
     MDRectangleFlatIconButton:
         text: " Sign Out"
@@ -210,7 +211,7 @@ ScreenManager:
         text_color: "black"
         line_color: "black"
         theme_icon_color: "Custom"
-        icon_color: "red"
+        icon_color: "black"
         on_release: root.manager.current = "sign_in"
     
     MDTextButton:
