@@ -4,12 +4,16 @@ from kivymd.uix.button import MDFlatButton
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivy.uix.screenmanager import Screen
+from plyer import filechooser
+from kivy.properties import ListProperty
+import shutil
 
 database = 'getbooked.db'
 
 
 
 class Profile(Screen):
+
     def delete_account(self):
         global delete
         delete = MDDialog(
@@ -27,6 +31,18 @@ class Profile(Screen):
         cursor = conn.cursor()
         cursor.execute(f'DELETE FROM users WHERE username = "{username}" ')
         conn.commit()
+
+    selection = ListProperty([])
+
+    def choose(self):
+        filechooser.open_file(on_selection=self.handle_selection)
+
+    def handle_selection(self, selection):
+        self.selection = selection
+
+    def on_selection(self, *a, **k):
+        profile_pic = str(self.selection).strip("['']")
+        shutil.copyfile(str(profile_pic), 'C:\\Users\\ds23s\PycharmProjects\\Get-Booked\\media\\avatar1.png')
 
 
 class SignIn(Screen):
@@ -60,12 +76,14 @@ class SignIn(Screen):
             conn = sqlite3.connect(database)
             cursor = conn.cursor()
             query = cursor.execute(f'SELECT password FROM users WHERE username = "{username}" ').fetchone()
+            conn.close()
 
             try:
                 if self.root.get_screen('sign_in').ids.password.text == query[0]:
                     self.root.get_screen('profile').ids.display_name.text = f"{username}'s Profile"
                     self.reset_input_field()
                     self.root.current = "profile"
+
 
                 else:
                     self.reset_input_field()

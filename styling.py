@@ -172,14 +172,33 @@ ScreenManager:
     MDFloatLayout:
         ElementCard:
             image: "media/avatar1.png"
+            
 
     MDLabel: 
         id: display_name
         text: "placeholder"
+        text_size: 
         font_style: "H5"
         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         halign: "center"
         valign: "center"
+    
+    MDLabel:
+        id: profilePic
+        text: "change profile picture"
+        theme_text_color: 'Hint'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.465}
+        halign: "center"
+        valign: "center"
+    
+    MDIconButton:
+        id: button
+        pos_hint: {'center_x': 0.5, 'center_y': 0.465}
+        opacity: 0
+        on_press: app.choose()
+        
+        
+        
 
     MDRectangleFlatIconButton:
         text: " My Calendar"
