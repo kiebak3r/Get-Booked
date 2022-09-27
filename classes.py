@@ -78,4 +78,26 @@ class SignIn(Screen):
 
 
 class SignUp(Screen):
-    pass
+    def add_user_to_database(self):
+        username = self.root.get_screen('sign_up').ids.new_username.text
+        password = self.root.get_screen('sign_up').ids.new_password.text
+        confirm_password = self.root.get_screen('sign_up').ids.new_password_confirm.text
+
+        if password == confirm_password:
+            pass
+
+        conn = sqlite3.connect(database)
+        cursor = conn.cursor()
+        try:
+            cursor.execute(f"INSERT INTO users (username) VALUES ('{username}')")
+
+        except sqlite3.IntegrityError:
+            self.root.get_screen('sign_up').ids.new_username.text = ""
+            duplicate_username_error = MDDialog(
+                title=f"Invalid Username \n Error Code (6)",
+                text=f"The username selected is not available Please select a new username and try again.",
+                buttons=[MDFlatButton(text="Close", on_release=lambda _: duplicate_username_error.dismiss())])
+
+            return duplicate_username_error.open()
+
+        conn.commit(), conn.close()

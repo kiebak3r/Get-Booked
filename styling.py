@@ -135,6 +135,7 @@ ScreenManager:
         line_color: "black"
         theme_icon_color: "Custom"
         icon_color: "red"
+        on_release: app.add_user_to_database()
     
         
 <Profile>
