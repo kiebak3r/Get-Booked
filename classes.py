@@ -5,6 +5,7 @@ from kivymd.uix.button import MDFlatButton
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivy.uix.screenmanager import Screen
+from kivymd.uix.filemanager import MDFileManager
 from plyer import filechooser
 from kivy.properties import ListProperty
 import shutil
@@ -33,79 +34,76 @@ database = 'getbooked.db'
 
 
 class Chat(Screen):
-    messages = ListProperty()
-
-    def add_message(self, text, side, color):
-        self.messages.append({
-            'message_id': len(self.messages),
-            'side': side,
-            'bg_color': color,
-            'text_size': [None, None],
-        })
-
-    def update_message_size(self, message_id, texture_size, max_width):
-        if max_width == 0:
-            return
-
-        one_line = dp(50)
-
-        if texture_size[0] >= max_width * 2 / 3:
-            self.messages[message_id] = {
-                **self.messages[message_id],
-                'text_size': (max_width * 2 / 3, None),
-            }
-
-        elif texture_size[0] < max_width * 2 / 3 and \
-                texture_size[1] > one_line:
-            self.messages[message_id] = {
-                **self.messages[message_id],
-                'text_size': (max_width * 2 / 3, None),
-                '_size': texture_size,
-            }
-
-        else:
-            self.messages[message_id] = {
-                **self.messages[message_id],
-                '_size': texture_size,
-            }
-
-    @staticmethod
-    def focus_textinput(textinput):
-        textinput.focus = True
-
-    def send_message(self, textinput):
-        text = textinput.text
-        textinput.text = ''
-        self.add_message(text, 'right', '#848482')
-        self.client_socket.send(bytes(text, "utf8"))
-        self.focus_textinput(textinput)
-        self.scroll_bottom()
-
-    def receive(self, text):
-        while True:
-            try:
-                text = self.client_socket.recv(self.BUFSIZ).decode("utf8")
-                print(text)
-                self.add_message(text, 'left', '#9955bb')
-
-            except OSError:
-                break
-
-    HOST = "127.0.0.1"
-    PORT = 33000
-    BUFSIZ = 1024
-    ADDR = (HOST, PORT)
-    client_socket = socket(AF_INET, SOCK_STREAM)
-    client_socket.connect(ADDR)
-    receive_thread = Thread(target=receive)
-    receive_thread.start()
-
-    def scroll_bottom(self):
-        rv = self.root.get_screen('chat').ids.rv
-        box = self.root.get_screen('chat').ids.box
-        if rv.height < box.height:
-            Animation.cancel_all(rv, 'scroll_y')
-            Animation(scroll_y=0, t='out_quad', d=.5).start(rv)
+    # messages = ListProperty()
+    #
+    # def add_message(self, text, side, color):
+    #     self.messages.append({
+    #         'message_id': len(self.messages),
+    #         'text': text,
+    #         'side': side,
+    #         'bg_color': color,
+    #         'text_size': [None, None],
+    #     })
+    #
+    # def update_message_size(self, message_id, texture_size, max_width):
+    #     if max_width == 0:
+    #         return
+    #
+    #     one_line = dp(50)
+    #
+    #     if texture_size[0] >= max_width * 2 / 3:
+    #         self.messages[message_id] = {
+    #             **self.messages[message_id],
+    #             'text_size': (max_width * 2 / 3, None),
+    #         }
+    #
+    #     elif texture_size[0] < max_width * 2 / 3 and \
+    #             texture_size[1] > one_line:
+    #         self.messages[message_id] = {
+    #             **self.messages[message_id],
+    #             'text_size': (max_width * 2 / 3, None),
+    #             '_size': texture_size,
+    #         }
+    #
+    #     else:
+    #         self.messages[message_id] = {
+    #             **self.messages[message_id],
+    #             '_size': texture_size,
+    #         }
+    #
+    # @staticmethod
+    # def focus_textinput(textinput):
+    #     textinput.focus = True
+    #
+    # def send_message(self, textinput):
+    #     text = textinput.text
+    #     textinput.text = ''
+    #     self.add_message(text, 'right', '#848482')
+    #     self.client_socket.send(bytes(text, "utf8"))
+    #     self.focus_textinput(textinput)
+    #     self.scroll_bottom()
+    #
+    # def receive_message(self):
+    #     while True:
+    #         msg = str(self.client_socket.recv(self.BUFSIZ).decode("utf8"))
+    #         self.add_message(f'{msg}', 'left', '#9955bb')
+    #         self.scroll_bottom()
+    #
+    # HOST = "127.0.0.1"
+    # PORT = 33000
+    # BUFSIZ = 1024
+    # ADDR = (HOST, PORT)
+    # client_socket = socket(AF_INET, SOCK_STREAM)
+    # client_socket.connect(ADDR)
+    # receive_thread = Thread(target=receive_message)
+    # receive_thread.start()
+    #
+    # def scroll_bottom(self):
+    #     rv = self.root.get_screen('chat').ids.rv
+    #     box = self.root.get_screen('chat').ids.box
+    #     if rv.height < box.height:
+    #         Animation.cancel_all(rv, 'scroll_y')
+    #         Animation(scroll_y=0, t='out_quad', d=.5).start(rv)
 
     def on_save(self, instance, value, date_range):
         self.root.get_screen('booking').ids.date_button.text = str(value)
@@ -121,8 +119,8 @@ class Chat(Screen):
 
 class Profile(Screen):
     def add_picture_to_database(self):
-        # Add pictures path
-        self.insertBLOB("C:\\Users\\kieran.baker\\PycharmProjects\\Get-Booked\\media\\logo.png", )
+        # Add pictures path -- can use self.select_path() to save users profile pic to db
+        self.insertBLOB(f"{self.select_path(self)}", )
 
     def convertToBinaryData(self, filename):
         with open(filename, 'rb') as file:
@@ -166,18 +164,29 @@ class Profile(Screen):
         cursor.execute(f'DELETE FROM users WHERE username = "{username}" ')
         conn.commit()
 
-    selection = ListProperty([])
+    def file_manager_open(self):
+        self.file_manager.show(os.path.expanduser("~"))
+        self.manager_open = True
 
-    def choose(self):
-        filechooser.open_file(on_selection=self.handle_selection)
+    def select_path(self, path):
+        self.exit_manager()
+        if os.path.isfile(path):
+            Clock.schedule_once(lambda x: self.set_pic(path), 1)
+        return path
 
-    def handle_selection(self, selection):
-        self.selection = selection
+    def set_pic(self, new):
+        if os.path.isfile(new):
+            self.root.get_screen('profile').ids.profile_pic.image = new
 
-    def on_selection(self, *a, **k):
-        profile_pic = str(self.selection).strip("['']")
-        shutil.copyfile(str(profile_pic), f'{os.environ["USERPROFILE"]}\\'
-                                          f'PycharmProjects\\Get-Booked\\media\\avatar1.png')
+    def exit_manager(self, *args):
+        self.manager_open = False
+        self.file_manager.close()
+
+    def events(self, instance, keyboard, keycode, text, modifiers):
+        if keyboard in (1001, 27):
+            if self.manager_open:
+                self.file_manager.back()
+        return True
 
 
 class SignIn(Screen):

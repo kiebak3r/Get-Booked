@@ -174,31 +174,24 @@ ScreenManager:
 
     MDFloatLayout:
         ElementCard:
+            id: profile_pic
             image: "media/avatar1.png"
             
-
+    MDIconButton:
+        icon: "pencil-circle"
+        icon_size: "64sp"
+        pos_hint: {'center_x': 0.5, 'center_y': 0.55}
+        on_press: app.file_manager_open()
+    
     MDLabel: 
         id: display_name
-        text: "placeholder"
+        text: ""
         text_size: 
         font_style: "H5"
         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         halign: "center"
         valign: "center"
     
-    MDLabel:
-        id: profilePic
-        text: "change profile picture"
-        theme_text_color: 'Hint'
-        pos_hint: {'center_x': 0.5, 'center_y': 0.465}
-        halign: "center"
-        valign: "center"
-    
-    MDIconButton:
-        id: button
-        pos_hint: {'center_x': 0.5, 'center_y': 0.465}
-        opacity: 0
-        on_press: app.choose()
         
     MDRectangleFlatIconButton:
         text: " My Calendar"
@@ -257,6 +250,7 @@ ScreenManager:
     Image:
         source: root.image
         halign: "center"
+        radius: dp(100)
 
 
 <ImageButton@ButtonBehavior+Image>:
@@ -271,95 +265,95 @@ ScreenManager:
     canvas.after:
         PopMatrix
 
-<Chat>
-    name: "chat"
-    
-    BoxLayout:
-        orientation: 'vertical'
-        padding: dp(5), dp(5)
-    
-        RecycleView:
-            id: rv
-            data: app.messages
-            viewclass: 'Message'
-            do_scroll_x: False
-        
-            RecycleBoxLayout:
-                id: box
-                orientation: 'vertical'
-                size_hint_y: None
-                size: self.minimum_size
-                default_size_hint: .95, None
-                # magic value for the default height of the message
-                default_size: 0, 39
-                key_size: '_size'
-                
-        BoxLayout:
-            size_hint: 1, None
-            size: self.minimum_size
-        
-            MDTextField:
-                hint_text: "Type a new message"
-                mode: "fill"
-                id: ti
-                size_hint: 1, None
-                height: min(max(self.line_height, self.minimum_height), 150)
-                # pos_hint: {'center_x': 0.5, 'center_y': 0.6}
-                multiline: False
-                on_text_validate:
-                    app.send_message(self)
-                
-            MDIconButton:
-                icon: "folder-multiple-image"
-                icon_size: "64sp"
-                pos_hint: {'center_x': 0.5, 'center_y': 0.6}
-                # on_release:  
-        
-            MDIconButton:
-                icon: "send-circle"
-                icon_size: "64sp"
-                pos_hint: {'center_x': 0.5, 'center_y': 0.6}
-                on_release: app.send_message(ti)       
-                
-<Message@FloatLayout>:
-    message_id: -1
-    bg_color: '#223344'
-    side: 'left'
-    text: ''
-    size_hint_y: None
-    _size: 0, 0
-    size: self._size
-    text_size: None, None
-    opacity: min(1, self._size[0])
-    Label:
-        text: root.text
-        padding: 15, 15
-        size_hint: None, 1
-        size: self.texture_size
-        text_size: root.text_size
-        on_texture_size:
-            app.update_message_size(
-            root.message_id,
-            self.texture_size,
-            root.width,
-            )
-        pos_hint:
-            (
-            {'x': 0, 'center_y': .5}
-            if root.side == 'left' else
-            {'right': 1, 'center_y': .5}
-            )
-        canvas.before:
-            Color:
-                rgba: RGBA(root.bg_color)
-            RoundedRectangle:
-                size: self.texture_size
-                radius: dp(5), dp(5), dp(5), dp(5)
-                pos: self.pos
-        canvas.after:
-            Color:
-            Line:
-                rounded_rectangle: self.pos + self.texture_size + [dp(5)]
-                width: 1.01
+# <Chat>
+#     name: "chat"
+#     
+#     BoxLayout:
+#         orientation: 'vertical'
+#         padding: dp(5), dp(5)
+#     
+#         RecycleView:
+#             id: rv
+#             data: app.messages
+#             viewclass: 'Message'
+#             do_scroll_x: False
+#         
+#             RecycleBoxLayout:
+#                 id: box
+#                 orientation: 'vertical'
+#                 size_hint_y: None
+#                 size: self.minimum_size
+#                 default_size_hint: .95, None
+#                 # magic value for the default height of the message
+#                 default_size: 0, 39
+#                 key_size: '_size'
+#                 
+#         BoxLayout:
+#             size_hint: 1, None
+#             size: self.minimum_size
+#         
+#             MDTextField:
+#                 hint_text: "Type a new message"
+#                 mode: "fill"
+#                 id: ti
+#                 size_hint: 1, None
+#                 height: min(max(self.line_height, self.minimum_height), 150)
+#                 # pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+#                 multiline: False
+#                 on_text_validate:
+#                     app.send_message(self)
+#                 
+#             MDIconButton:
+#                 icon: "folder-multiple-image"
+#                 icon_size: "64sp"
+#                 pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+#                 # on_release:  
+#         
+#             MDIconButton:
+#                 icon: "send-circle"
+#                 icon_size: "64sp"
+#                 pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+#                 on_release: app.send_message(ti)       
+#                 
+# <Message@FloatLayout>:
+#     message_id: -1
+#     bg_color: '#223344'
+#     side: 'left'
+#     text: ''
+#     size_hint_y: None
+#     _size: 0, 0
+#     size: self._size
+#     text_size: None, None
+#     opacity: min(1, self._size[0])
+#     Label:
+#         text: root.text
+#         padding: 15, 15
+#         size_hint: None, 1
+#         size: self.texture_size
+#         text_size: root.text_size
+#         on_texture_size:
+#             app.update_message_size(
+#             root.message_id,
+#             self.texture_size,
+#             root.width,
+#             )
+#         pos_hint:
+#             (
+#             {'x': 0, 'center_y': .5}
+#             if root.side == 'left' else
+#             {'right': 1, 'center_y': .5}
+#             )
+#         canvas.before:
+#             Color:
+#                 rgba: RGBA(root.bg_color)
+#             RoundedRectangle:
+#                 size: self.texture_size
+#                 radius: dp(5), dp(5), dp(5), dp(5)
+#                 pos: self.pos
+#         canvas.after:
+#             Color:
+#             Line:
+#                 rounded_rectangle: self.pos + self.texture_size + [dp(5)]
+#                 width: 1.01
                 
 """

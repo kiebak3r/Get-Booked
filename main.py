@@ -13,10 +13,19 @@ class GetBooked(
 
                 ):
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Window.bind(on_keyboard=self.events)
+        self.manager_open = False
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager, select_path=self.select_path
+        )
+
     def build(self):
         self.theme_cls.theme_style = 'Light'
         self.theme_cls.primary_palette = 'Gray'
         self.theme_cls.primary_hue = 'A700'
+        Clock.schedule_once(lambda x: self.file_manager, 3)
         screen = Builder.load_string(styling)
         return screen
 
