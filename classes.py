@@ -25,6 +25,8 @@ from kivy.animation import Animation
 from kivy.metrics import dp
 from kivy.core.window import Window
 from kivymd.app import MDApp
+from socket import AF_INET, socket, SOCK_STREAM
+from threading import Thread
 
 
 database = 'getbooked.db'
@@ -36,7 +38,6 @@ class Chat(Screen):
     def add_message(self, text, side, color):
         self.messages.append({
             'message_id': len(self.messages),
-            'text': text,
             'side': side,
             'bg_color': color,
             'text_size': [None, None],
@@ -76,12 +77,28 @@ class Chat(Screen):
         text = textinput.text
         textinput.text = ''
         self.add_message(text, 'right', '#848482')
+        self.client_socket.send(bytes(text, "utf8"))
         self.focus_textinput(textinput)
-        Clock.schedule_once(lambda *args: self.answer(text), 1)
         self.scroll_bottom()
 
-    def answer(self, text, *args):
-        self.add_message('Auto response', 'left', '#9955bb')
+    def receive(self, text):
+        while True:
+            try:
+                text = self.client_socket.recv(self.BUFSIZ).decode("utf8")
+                print(text)
+                self.add_message(text, 'left', '#9955bb')
+
+            except OSError:
+                break
+
+    HOST = "127.0.0.1"
+    PORT = 33000
+    BUFSIZ = 1024
+    ADDR = (HOST, PORT)
+    client_socket = socket(AF_INET, SOCK_STREAM)
+    client_socket.connect(ADDR)
+    receive_thread = Thread(target=receive)
+    receive_thread.start()
 
     def scroll_bottom(self):
         rv = self.root.get_screen('chat').ids.rv
