@@ -1,3 +1,4 @@
+import os
 import sqlite3
 import requests, string
 from kivymd.uix.button import MDFlatButton
@@ -9,7 +10,6 @@ from kivy.properties import ListProperty
 import shutil
 
 database = 'getbooked.db'
-
 
 
 class Profile(Screen):
@@ -42,7 +42,8 @@ class Profile(Screen):
 
     def on_selection(self, *a, **k):
         profile_pic = str(self.selection).strip("['']")
-        shutil.copyfile(str(profile_pic), 'C:\\Users\\ds23s\PycharmProjects\\Get-Booked\\media\\avatar1.png')
+        shutil.copyfile(str(profile_pic), f'{os.environ["USERPROFILE"]}\\PycharmProjects\\'
+                                          f'Get-Booked\\media\\avatar1.png')
 
 
 class SignIn(Screen):
