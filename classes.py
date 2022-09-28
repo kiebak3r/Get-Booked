@@ -103,6 +103,34 @@ class Chat(Screen):
 
 
 class Profile(Screen):
+    def add_picture_to_database(self):
+        # Add pictures path
+        self.insertBLOB("C:\\Users\\kieran.baker\\PycharmProjects\\Get-Booked\\media\\logo.png", )
+
+    def convertToBinaryData(self, filename):
+        with open(filename, 'rb') as file:
+            blobData = file.read()
+        return blobData
+
+    def insertBLOB(self, photo):
+        try:
+            sqliteConnection = sqlite3.connect('getbooked.db')
+            cursor = sqliteConnection.cursor()
+            sqlite_insert_blob_query = f" UPDATE users SET profile_picture = ? WHERE username = '{username}'"
+
+            empPhoto = self.convertToBinaryData(photo)
+            data_tuple = (empPhoto,)
+            cursor.execute(sqlite_insert_blob_query, data_tuple)
+            sqliteConnection.commit()
+            cursor.close()
+
+        except sqlite3.Error:
+            pass
+
+        finally:
+            if sqliteConnection:
+                sqliteConnection.close()
+
     def delete_account(self):
         global delete
         delete = MDDialog(
