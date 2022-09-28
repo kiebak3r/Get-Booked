@@ -1,4 +1,3 @@
-import os
 import sqlite3
 import requests, string
 from kivymd.uix.button import MDFlatButton
@@ -8,12 +7,101 @@ from kivy.uix.screenmanager import Screen
 from plyer import filechooser
 from kivy.properties import ListProperty
 import shutil
+from datetime import datetime
+import sqlite3
+import requests, string
+from kivy.properties import ListProperty
+from kivymd.uix.button import MDFlatButton
+from kivymd.uix.card import MDCard
+from kivymd.uix.dialog import MDDialog
+from kivy.uix.screenmanager import Screen
+from kivymd.uix.picker import MDDatePicker, MDTimePicker
+from kivy.app import App
+from kivy.lang import Builder
+from kivy.clock import Clock
+from kivy.properties import ListProperty
+from kivy.animation import Animation
+from kivy.metrics import dp
+from kivy.core.window import Window
+from kivymd.app import MDApp
+
 
 database = 'getbooked.db'
 
 
-class Profile(Screen):
+class Chat(Screen):
+    messages = ListProperty()
 
+    def add_message(self, text, side, color):
+        self.messages.append({
+            'message_id': len(self.messages),
+            'text': text,
+            'side': side,
+            'bg_color': color,
+            'text_size': [None, None],
+        })
+
+    def update_message_size(self, message_id, texture_size, max_width):
+        if max_width == 0:
+            return
+
+        one_line = dp(50)
+
+        if texture_size[0] >= max_width * 2 / 3:
+            self.messages[message_id] = {
+                **self.messages[message_id],
+                'text_size': (max_width * 2 / 3, None),
+            }
+
+        elif texture_size[0] < max_width * 2 / 3 and \
+                texture_size[1] > one_line:
+            self.messages[message_id] = {
+                **self.messages[message_id],
+                'text_size': (max_width * 2 / 3, None),
+                '_size': texture_size,
+            }
+
+        else:
+            self.messages[message_id] = {
+                **self.messages[message_id],
+                '_size': texture_size,
+            }
+
+    @staticmethod
+    def focus_textinput(textinput):
+        textinput.focus = True
+
+    def send_message(self, textinput):
+        text = textinput.text
+        textinput.text = ''
+        self.add_message(text, 'right', '#848482')
+        self.focus_textinput(textinput)
+        Clock.schedule_once(lambda *args: self.answer(text), 1)
+        self.scroll_bottom()
+
+    def answer(self, text, *args):
+        self.add_message('Auto response', 'left', '#9955bb')
+
+    def scroll_bottom(self):
+        rv = self.root.get_screen('chat').ids.rv
+        box = self.root.get_screen('chat').ids.box
+        if rv.height < box.height:
+            Animation.cancel_all(rv, 'scroll_y')
+            Animation(scroll_y=0, t='out_quad', d=.5).start(rv)
+
+    def on_save(self, instance, value, date_range):
+        self.root.get_screen('booking').ids.date_button.text = str(value)
+
+    def on_cancel(self, instance, value):
+        pass
+
+    def show_date_picker(self):
+        date_dialog = MDDatePicker(primary_color="gray")
+        date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
+        date_dialog.open()
+
+
+class Profile(Screen):
     def delete_account(self):
         global delete
         delete = MDDialog(
@@ -42,8 +130,7 @@ class Profile(Screen):
 
     def on_selection(self, *a, **k):
         profile_pic = str(self.selection).strip("['']")
-        shutil.copyfile(str(profile_pic), f'{os.environ["USERPROFILE"]}\\PycharmProjects\\'
-                                          f'Get-Booked\\media\\avatar1.png')
+        shutil.copyfile(str(profile_pic), 'C:\\Users\\ds23s\PycharmProjects\\Get-Booked\\media\\avatar1.png')
 
 
 class SignIn(Screen):

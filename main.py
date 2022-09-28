@@ -9,7 +9,7 @@ from kivymd.app import MDApp
 class GetBooked(
 
                 MDApp, SignIn, SignUp,
-                Profile
+                Profile, Chat
 
                 ):
 
