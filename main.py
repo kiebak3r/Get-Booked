@@ -31,6 +31,7 @@ class GetBooked(
 
     def on_start(self):
         self.root.get_screen('profile').ids.profile_pic.source = default_avatar
+        self.chat_thread()
 
 
 if __name__ == '__main__':
