@@ -16,10 +16,10 @@ styling = """
 
 ScreenManager:
     transition: NoTransition()
-    Chat:
     SignIn:
     SignUp:
     Profile:
+    Chat:
 
 <SignIn>
     name: "sign_in"
