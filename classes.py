@@ -1,13 +1,14 @@
 import os
 import sqlite3
 import requests, string
+from kivy.uix.floatlayout import FloatLayout
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.filemanager import MDFileManager
 from plyer import filechooser
-from kivy.properties import ListProperty
+from kivy.properties import ListProperty, StringProperty
 import shutil
 from datetime import datetime
 import sqlite3
@@ -117,6 +118,10 @@ class Chat(Screen):
         date_dialog.open()
 
 
+class PictureFloatLayout(FloatLayout):
+    source = StringProperty()
+
+
 class Profile(Screen):
     def add_picture_to_database(self):
         # Add pictures path -- can use self.select_path() to save users profile pic to db
@@ -176,7 +181,7 @@ class Profile(Screen):
 
     def set_pic(self, new):
         if os.path.isfile(new):
-            self.root.get_screen('profile').ids.profile_pic.image = new
+            self.root.get_screen('profile').ids.profile_pic.source = new
 
     def exit_manager(self, *args):
         self.manager_open = False

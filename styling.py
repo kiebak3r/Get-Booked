@@ -2,13 +2,14 @@ from classes import *
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager
 
+default_avatar = 'C:\\Users\\kieran.baker\\PycharmProjects\\Get-Booked\\media\\avatar1.png'
+
 screen_manager = ScreenManager()
 Window.size = (300, 600)
 screen_manager.add_widget(Profile(name="profile"))
 screen_manager.add_widget(SignIn(name="sign_in"))
 screen_manager.add_widget(SignUp(name="sign_up"))
 screen_manager.add_widget(Chat(name="chat"))
-
 
 styling = """
 #:import RGBA kivy.utils.rgba
@@ -23,18 +24,18 @@ ScreenManager:
 
 <SignIn>
     name: "sign_in"
-    
+
     MDFloatLayout:
         ElementCard:
             image: "media/logo.png"
-                                         
+
     MDLabel: 
         text: "catchy slogan here.."
         font_style: "H5"
         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         halign: "center"
         valign: "center"
-    
+
     MDTextField:
         id: username
         hint_text: "Username"
@@ -44,7 +45,7 @@ ScreenManager:
         size_hint_x: .8
         max_text_length: 14
         multiline: False
-        
+
     MDTextField:
         id: password
         password: True
@@ -55,7 +56,7 @@ ScreenManager:
         size_hint_x: .8
         max_text_length: 10
         multiline: False
-    
+
     MDRectangleFlatIconButton:
         text: "Sign In"
         icon: "arrow-right-bold"
@@ -66,16 +67,16 @@ ScreenManager:
         theme_icon_color: "Custom"
         icon_color: "black"
         on_release: app.user_login_lookup()
-    
+
     MDTextButton:
         text: "Create an account"
         font_style: "Subtitle2"
         pos_hint: {'center_x': 0.5, 'center_y': 0.15}
         on_press: root.manager.current = "sign_up"
-    
+
 <SignUp>
     name: "sign_up"
-                      
+
     MDBoxLayout:    
         orientation: "vertical"
 
@@ -93,14 +94,14 @@ ScreenManager:
                 text: "Help"
                 icon: "comment-question"
                 on_tab_release: root.manager.current = ""
-                                       
+
     MDLabel: 
         text: "Create an account"
         font_style: "H5"
         pos_hint: {'center_x': 0.5, 'center_y': 0.8}
         halign: "center"
         valign: "center"
-            
+
     MDTextField:
         id: new_username
         hint_text: "Choose a username"
@@ -110,7 +111,7 @@ ScreenManager:
         size_hint_x: .8
         max_text_length: 14
         multiline: False
-        
+
     MDTextField:
         id: new_password
         password: True
@@ -121,7 +122,7 @@ ScreenManager:
         size_hint_x: .8
         max_text_length: 10
         multiline: False
-    
+
     MDTextField:
         id: new_password_confirm
         password: True
@@ -132,7 +133,7 @@ ScreenManager:
         size_hint_x: .8
         max_text_length: 10
         multiline: False
-    
+
     MDRectangleFlatIconButton:
         text: "Create Account"
         icon: "plus-thick"
@@ -143,11 +144,11 @@ ScreenManager:
         theme_icon_color: "Custom"
         icon_color: "black"
         on_release: app.add_user_to_database()
-    
-        
+
+
 <Profile>
     name: "profile"
-            
+
     MDBoxLayout:    
         orientation: "vertical"
 
@@ -172,17 +173,25 @@ ScreenManager:
                 icon: "message"
                 on_tab_release: root.manager.current = "chat"
 
-    MDFloatLayout:
-        ElementCard:
-            id: profile_pic
-            image: "media/avatar1.png"
-            
+    PictureFloatLayout:
+        id: profile_pic
+        pos_hint: {"center_x": .5, "center_y": .63}      
+        canvas:
+            Color:
+                rgb: 1, 1, 1          
+            Ellipse:
+                source: self.source
+                pos: [self.center_x - 305/3, self.center_y - 100/3]
+                size: 200, 200
+                angle_start: 0
+                angle_end: 360
+                
     MDIconButton:
         icon: "pencil-circle"
         icon_size: "64sp"
         pos_hint: {'center_x': 0.5, 'center_y': 0.55}
         on_press: app.file_manager_open()
-    
+
     MDLabel: 
         id: display_name
         text: ""
@@ -191,8 +200,7 @@ ScreenManager:
         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         halign: "center"
         valign: "center"
-    
-        
+
     MDRectangleFlatIconButton:
         text: " My Calendar"
         icon: "calendar"
@@ -216,7 +224,7 @@ ScreenManager:
         line_color: "black"
         theme_icon_color: "Custom"
         icon_color: "black"
-    
+
     MDRectangleFlatIconButton:
         text: " Sign Out"
         icon: "exit-to-app"
@@ -228,7 +236,7 @@ ScreenManager:
         theme_icon_color: "Custom"
         icon_color: "black"
         on_release: root.manager.current = "sign_in"
-    
+
     MDTextButton:
         text: "Delete account"
         font_style: "Subtitle2"
@@ -267,11 +275,11 @@ ScreenManager:
 
 <Chat>
     name: "chat"
-        
+
     BoxLayout:
         orientation: 'vertical'
         padding: dp(5), dp(5)
-        
+
         RecycleView:
             id: rv
             data: app.messages
@@ -287,7 +295,7 @@ ScreenManager:
                 # magic value for the default height of the message
                 default_size: 0, 39
                 key_size: '_size'
-        
+
         BoxLayout:
             size_hint: 1, None
             size: self.minimum_size
@@ -302,7 +310,7 @@ ScreenManager:
                 multiline: False
                 on_text_validate:
                     app.send_message(self)
-            
+
             MDIconButton:
                 icon: "folder-multiple-image"
                 icon_size: "64sp"
@@ -314,13 +322,13 @@ ScreenManager:
                 icon_size: "64sp"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.6}
                 on_release: app.send_message(ti)  
-    
+
     MDIconButton:
         icon: "arrow-left"
         icon_size: "64sp"
         pos_hint: {'center_x': 0.0999, 'center_y': 0.95}
         on_release: root.manager.current = "profile" 
-    
+
 <Message@FloatLayout>:
     message_id: -1
     bg_color: '#223344'
@@ -361,5 +369,5 @@ ScreenManager:
             Line:
                 rounded_rectangle: self.pos + self.texture_size + [dp(5)]
                 width: 1.01
-                
+
 """

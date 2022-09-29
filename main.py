@@ -29,6 +29,9 @@ class GetBooked(
         screen = Builder.load_string(styling)
         return screen
 
+    def on_start(self):
+        self.root.get_screen('profile').ids.profile_pic.source = default_avatar
+
 
 if __name__ == '__main__':
     if hasattr(sys, '_MEIPASS'):
