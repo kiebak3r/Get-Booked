@@ -440,7 +440,13 @@ class Calendar(Screen):
             events = events_result.get('items', [])
 
             if not events:
-                return
+                failed_to_sync_calendar = MDDialog(
+                                            title=f"An error occurred \n ",
+                                            text=f"We failed to sync your google calendar, please try again.",
+                                            buttons=[MDFlatButton(text="Close",
+                                                     on_release=lambda _: failed_to_sync_calendar.dismiss())])
+
+                return failed_to_sync_calendar.open()
 
             for event in events:
                 try:
@@ -475,12 +481,6 @@ class Calendar(Screen):
                                             secondary_text=f"{self.date} at {self.start} - {self.end}"
                                             )
                         )
-
-                        self.root.current = "calendar"
-
-                    else:
-                        self.root.get_screen('calendar').ids.container.add_widget(
-                            OneLineListItem(text="You have no upcoming appointments"))
 
                         self.root.current = "calendar"
 
