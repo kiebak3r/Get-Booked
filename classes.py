@@ -441,8 +441,8 @@ class Calendar(Screen):
 
             if not events:
                 failed_to_sync_calendar = MDDialog(
-                                            title=f"An error occurred \n ",
-                                            text=f"We failed to sync your google calendar, please try again.",
+                                            title=f"No Appointments \n ",
+                                            text=f"You have no upcoming appointments in your calendar.",
                                             buttons=[MDFlatButton(text="Close",
                                                      on_release=lambda _: failed_to_sync_calendar.dismiss())])
 
