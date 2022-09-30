@@ -7,7 +7,7 @@ from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.filemanager import MDFileManager
-from kivymd.uix.list import TwoLineListItem
+from kivymd.uix.list import TwoLineListItem, OneLineListItem
 from kivy.properties import ListProperty, StringProperty
 from datetime import datetime
 import sqlite3, datetime
@@ -475,6 +475,12 @@ class Calendar(Screen):
                                             secondary_text=f"{self.date} at {self.start} - {self.end}"
                                             )
                         )
+
+                        self.root.current = "calendar"
+
+                    else:
+                        self.root.get_screen('calendar').ids.container.add_widget(
+                            OneLineListItem(text="You have no upcoming appointments"))
 
                         self.root.current = "calendar"
 
