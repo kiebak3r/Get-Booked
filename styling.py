@@ -10,6 +10,7 @@ screen_manager.add_widget(Profile(name="profile"))
 screen_manager.add_widget(SignIn(name="sign_in"))
 screen_manager.add_widget(SignUp(name="sign_up"))
 screen_manager.add_widget(Chat(name="chat"))
+screen_manager.add_widget(Chat(name="calendar"))
 
 styling = """
 #:import RGBA kivy.utils.rgba
@@ -21,6 +22,45 @@ ScreenManager:
     SignUp:
     Profile:
     Chat:
+    Calendar:
+    
+<Calendar>
+    name: "calendar"
+            
+    MDBoxLayout:    
+        orientation: "vertical"
+
+        MDBottomNavigation:
+            text_color_normal: 1, 1, 1, 1
+
+            MDBottomNavigationItem:
+                name: "back"
+                text: "back"
+                icon: "arrow-left-circle"
+                on_tab_press: app.clear_appointments()
+                on_tab_release: root.manager.current = "profile"
+
+            MDBottomNavigationItem:
+                name: "refresh"
+                text: "refresh"
+                icon: "refresh-circle"
+                on_tab_press: app.clear_appointments()
+                on_tab_release: app.check_appointments()
+    
+    MDLabel:
+        text: "Upcoming Appointments"
+        pos_hint: {"center_y": 0.92, "center_x": 0.5}
+        font_style: "H6"
+        halign: "center"
+        valign: "center"
+        
+    ScrollView:
+        size_hint_y: .8
+        size_hint_x: 1
+        pos_hint: {"center_y": 0.5, "center_x": 0.5}
+            
+        MDList:
+            id: container
 
 <SignIn>
     name: "sign_in"
@@ -173,7 +213,7 @@ ScreenManager:
                 name: "calendar"
                 text: "Calendar"
                 icon: "calendar-month"
-                on_tab_release: root.manager.current = ""
+                on_tab_release: app.check_appointments()
 
             MDBottomNavigationItem:
                 name: "messages"

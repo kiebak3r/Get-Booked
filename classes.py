@@ -1,6 +1,4 @@
 import os
-import sqlite3
-import requests, string
 from kivy.uix.floatlayout import FloatLayout
 from kivymd.toast import toast
 from kivymd.uix.bottomsheet import MDGridBottomSheet
@@ -9,31 +7,32 @@ from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.filemanager import MDFileManager
-from plyer import filechooser
+from kivymd.uix.list import TwoLineListItem
 from kivy.properties import ListProperty, StringProperty
-import shutil
 from datetime import datetime
-import sqlite3
+import sqlite3, datetime
 import requests, string
-from kivy.properties import ListProperty
 from kivymd.uix.button import MDFlatButton
-from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivy.uix.screenmanager import Screen
-from kivymd.uix.picker import MDDatePicker, MDTimePicker
-from kivy.app import App
-from kivy.lang import Builder
+from kivymd.uix.picker import MDDatePicker
 from kivy.clock import Clock
 from kivy.properties import ListProperty
 from kivy.animation import Animation
 from kivy.metrics import dp
-from kivy.core.window import Window
-from kivymd.app import MDApp
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
+import datetime
+import os.path
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
 
-database = 'getbooked.db'
+SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+database = 'misc/getbooked.db'
 
 
 class Chat(Screen):
@@ -172,7 +171,7 @@ class Profile(Screen):
 
     def insertBLOB(self, photo):
         try:
-            sqliteConnection = sqlite3.connect('getbooked.db')
+            sqliteConnection = sqlite3.connect('misc/getbooked.db')
             cursor = sqliteConnection.cursor()
             sqlite_insert_blob_query = f" UPDATE users SET profile_picture = ? WHERE username = '{username}'"
 
@@ -404,3 +403,84 @@ class SignUp(Screen):
                         buttons=[MDFlatButton(text="Close", on_release=lambda _: duplicate_username_error.dismiss())])
 
                     return duplicate_username_error.open()
+
+
+class Calendar(Screen):
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        self.date = None
+        self.title = None
+        self.details = None
+        self.start = None
+        self.end = None
+
+    def clear_appointments(self):
+        self.root.get_screen('calendar').ids.container.clear_widgets()
+
+    def check_appointments(self):
+        creds = None
+        if os.path.exists('misc/token.json'):
+            creds = Credentials.from_authorized_user_file('misc/token.json', SCOPES)
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    'misc/credentials.json', SCOPES)
+                creds = flow.run_local_server(port=0)
+            with open('misc/token.json', 'w') as token:
+                token.write(creds.to_json())
+        try:
+            service = build('calendar', 'v3', credentials=creds)
+
+            now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+            events_result = service.events().list(calendarId='primary', timeMin=now,
+                                                  maxResults=10, singleEvents=True,
+                                                  orderBy='startTime').execute()
+            events = events_result.get('items', [])
+
+            if not events:
+                return
+
+            for event in events:
+                try:
+                    try:
+                        self.title = event['summary']
+                    except KeyError:
+                        pass
+
+                    try:
+                        self.details = event['description']
+                    except KeyError:
+                        pass
+
+                    try:
+                        self.date = event['start']['dateTime'][0:10]
+                    except KeyError:
+                        pass
+
+                    try:
+                        self.start = event['start']['dateTime'][12:16]
+                    except KeyError:
+                        pass
+
+                    try:
+                        self.end = event['end']['dateTime'][12:16]
+                    except KeyError:
+                        pass
+
+                    if self.title is not None:
+                        self.root.get_screen('calendar').ids.container.add_widget(
+                            TwoLineListItem(text=self.title,
+                                            secondary_text=f"{self.date} at {self.start} - {self.end}"
+                                            )
+                        )
+
+                        self.root.current = "calendar"
+
+                except NameError:
+                    pass
+
+        except HttpError:
+            pass
+
