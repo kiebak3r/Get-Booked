@@ -315,20 +315,20 @@ ScreenManager:
                 size_hint: 1, None
                 height: min(max(self.line_height, self.minimum_height), 150)
                 # pos_hint: {'center_x': 0.5, 'center_y': 0.6}
-                multiline: False
+                multiline: True
                 on_text_validate:
                     app.send_message(self)
 
             MDIconButton:
                 icon: "folder-multiple-image"
                 icon_size: "64sp"
-                pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 # on_release:  
 
             MDIconButton:
                 icon: "send-circle"
                 icon_size: "64sp"
-                pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 on_release: app.send_message(ti)  
 
     MDIconButton:

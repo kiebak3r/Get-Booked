@@ -50,10 +50,15 @@ class Chat(Screen):
         global text
         text = textinput.text
         textinput.text = ''
-        self.add_message(text, 'right', '#848482')
-        self.client_socket.send(bytes(text, "utf8"))
-        self.focus_textinput(textinput)
-        self.scroll_bottom()
+
+        try:
+            self.add_message(text, 'right', '#848482')
+            self.client_socket.send(bytes(text, "utf8"))
+            self.focus_textinput(textinput)
+            self.scroll_bottom()
+
+        except OSError:
+            print("No connection to server")
 
     def fetch_message(self):
         while True:
@@ -208,7 +213,7 @@ class Profile(Screen):
 
 
 class SignIn(Screen):
-    def remember_me(self, value):
+    def remember_me(self, checkbox, value):
         if value:
             pass  # add way to skip sign in screen
 
