@@ -57,10 +57,15 @@ class Chat(Screen):
 
     def fetch_message(self):
         while True:
-            received = self.client_socket.recv(self.BUFSIZ).decode("utf8")
-            if received != text:
-                self.add_message(received, 'left', '#9f00ff')
-                self.scroll_bottom()
+            try:
+                received = self.client_socket.recv(self.BUFSIZ).decode("utf8")
+                if received != text:
+                    self.add_message(received, 'left', '#9f00ff')
+                    self.scroll_bottom()
+
+            except OSError:
+                print("No connection to server")
+                break
 
     def update_message_size(self, message_id, texture_size, max_width):
         if max_width == 0:
@@ -92,12 +97,16 @@ class Chat(Screen):
     def focus_textinput(textinput):
         textinput.focus = True
 
-    HOST = "127.0.0.1"
-    PORT = 33000
-    BUFSIZ = 1024
-    ADDR = (HOST, PORT)
-    client_socket = socket(AF_INET, SOCK_STREAM)
-    client_socket.connect(ADDR)
+    try:
+        HOST = "127.0.0.1"
+        PORT = 33000
+        BUFSIZ = 1024
+        ADDR = (HOST, PORT)
+        client_socket = socket(AF_INET, SOCK_STREAM)
+        client_socket.connect(ADDR)
+
+    except ConnectionRefusedError:
+        print("couldnt make server connection.")
 
     def chat_thread(self):
         self.receive_thread = Thread(target=self.fetch_message)
