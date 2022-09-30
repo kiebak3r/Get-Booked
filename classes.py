@@ -30,7 +30,6 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 database = 'misc/getbooked.db'
 
@@ -191,10 +190,10 @@ class Profile(Screen):
     def delete_account(self):
         global delete
         delete = MDDialog(
-                    title=f"Account Deletion",
-                    text=f"Are you sure you would like to delete your account?",
-                    buttons=[MDFlatButton(text="No", on_release=lambda _: delete.dismiss()),
-                             MDFlatButton(text="Yes", on_release=lambda _: self.delete_flow())])
+            title=f"Account Deletion",
+            text=f"Are you sure you would like to delete your account?",
+            buttons=[MDFlatButton(text="No", on_release=lambda _: delete.dismiss()),
+                     MDFlatButton(text="Yes", on_release=lambda _: self.delete_flow())])
 
         return delete.open()
 
@@ -278,9 +277,9 @@ class SignIn(Screen):
                 else:
                     self.reset_input_field()
                     password_error = MDDialog(
-                                title=f"Invalid Credentials \n Error Code (3)",
-                                text=f"the username or password entered was not recognised, please try again.",
-                                buttons=[MDFlatButton(text="Close", on_release=lambda _: password_error.dismiss())])
+                        title=f"Invalid Credentials \n Error Code (3)",
+                        text=f"the username or password entered was not recognised, please try again.",
+                        buttons=[MDFlatButton(text="Close", on_release=lambda _: password_error.dismiss())])
 
                     return password_error.open()
 
@@ -441,10 +440,10 @@ class Schedule(Screen):
 
             if not events:
                 failed_to_sync_calendar = MDDialog(
-                                            title=f"No Appointments \n ",
-                                            text=f"You have no upcoming appointments in your calendar.",
-                                            buttons=[MDFlatButton(text="Close",
-                                                     on_release=lambda _: failed_to_sync_calendar.dismiss())])
+                    title=f"No Appointments \n ",
+                    text=f"You have no upcoming appointments in your calendar.",
+                    buttons=[MDFlatButton(text="Close",
+                                          on_release=lambda _: failed_to_sync_calendar.dismiss())])
 
                 return failed_to_sync_calendar.open()
 
@@ -476,9 +475,17 @@ class Schedule(Screen):
                         pass
 
                     if self.title is not None:
+                        user_prompt = MDDialog(
+                            title=f"Actions menu",
+                            buttons=[MDFlatButton(text="Close",
+                                                  on_release=lambda x: user_prompt.dismiss()),
+                                     MDFlatButton(text="Delete",
+                                                  on_release=lambda x: user_prompt.dismiss())])
+
                         self.root.get_screen('schedule').ids.container.add_widget(
                             TwoLineListItem(text=self.title,
-                                            secondary_text=f"{self.date} at {self.start} - {self.end}"
+                                            secondary_text=f"{self.date} at {self.start} - {self.end}",
+                                            on_release=lambda x: user_prompt.open()
                                             )
                         )
 
@@ -489,4 +496,3 @@ class Schedule(Screen):
 
         except HttpError:
             pass
-
