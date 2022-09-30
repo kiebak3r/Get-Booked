@@ -405,7 +405,7 @@ class SignUp(Screen):
                     return duplicate_username_error.open()
 
 
-class Calendar(Screen):
+class Schedule(Screen):
     def __init__(self, **kw):
         super().__init__(**kw)
         self.date = None
@@ -415,7 +415,7 @@ class Calendar(Screen):
         self.end = None
 
     def clear_appointments(self):
-        self.root.get_screen('calendar').ids.container.clear_widgets()
+        self.root.get_screen('schedule').ids.container.clear_widgets()
 
     def check_appointments(self):
         creds = None
@@ -433,7 +433,7 @@ class Calendar(Screen):
         try:
             service = build('calendar', 'v3', credentials=creds)
 
-            now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+            now = datetime.datetime.now().isoformat() + 'Z'  # 'Z' indicates UTC time
             events_result = service.events().list(calendarId='primary', timeMin=now,
                                                   maxResults=10, singleEvents=True,
                                                   orderBy='startTime').execute()
@@ -466,23 +466,23 @@ class Calendar(Screen):
                         pass
 
                     try:
-                        self.start = event['start']['dateTime'][12:16]
+                        self.start = event['start']['dateTime'][11:16]
                     except KeyError:
                         pass
 
                     try:
-                        self.end = event['end']['dateTime'][12:16]
+                        self.end = event['end']['dateTime'][11:16]
                     except KeyError:
                         pass
 
                     if self.title is not None:
-                        self.root.get_screen('calendar').ids.container.add_widget(
+                        self.root.get_screen('schedule').ids.container.add_widget(
                             TwoLineListItem(text=self.title,
                                             secondary_text=f"{self.date} at {self.start} - {self.end}"
                                             )
                         )
 
-                        self.root.current = "calendar"
+                        self.root.current = "schedule"
 
                 except NameError:
                     pass

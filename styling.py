@@ -10,7 +10,7 @@ screen_manager.add_widget(Profile(name="profile"))
 screen_manager.add_widget(SignIn(name="sign_in"))
 screen_manager.add_widget(SignUp(name="sign_up"))
 screen_manager.add_widget(Chat(name="chat"))
-screen_manager.add_widget(Chat(name="calendar"))
+screen_manager.add_widget(Chat(name="schedule"))
 
 styling = """
 #:import RGBA kivy.utils.rgba
@@ -22,10 +22,10 @@ ScreenManager:
     SignUp:
     Profile:
     Chat:
-    Calendar:
+    Schedule:
     
-<Calendar>
-    name: "calendar"
+<Schedule>
+    name: "schedule"
             
     MDBoxLayout:    
         orientation: "vertical"
@@ -210,9 +210,9 @@ ScreenManager:
                 on_tab_release: root.manager.current = ""
 
             MDBottomNavigationItem:
-                name: "calendar"
-                text: "Calendar"
-                icon: "calendar-month"
+                name: "schedule"
+                text: "Schedule"
+                icon: "clock-outline"
                 on_tab_release: app.check_appointments()
 
             MDBottomNavigationItem:
