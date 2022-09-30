@@ -2,7 +2,7 @@ from classes import *
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager
 
-default_avatar = 'C:\\Users\\kieran.baker\\PycharmProjects\\Get-Booked\\media\\avatar1.png'
+default_avatar = f'{os.environ["USERPROFILE"]}\\PycharmProjects\\Get-Booked\\media\\avatar1.png'
 
 screen_manager = ScreenManager()
 Window.size = (300, 600)
