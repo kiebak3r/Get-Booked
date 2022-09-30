@@ -2,6 +2,8 @@ import os
 import sqlite3
 import requests, string
 from kivy.uix.floatlayout import FloatLayout
+from kivymd.toast import toast
+from kivymd.uix.bottomsheet import MDGridBottomSheet
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
@@ -35,6 +37,24 @@ database = 'getbooked.db'
 
 
 class Chat(Screen):
+    def callback_for_menu_items(self, *args):
+        toast(args[0])
+
+    def show_example_grid_bottom_sheet(self):
+        bottom_sheet_menu = MDGridBottomSheet()
+        data = {
+            "Camera": "camera",
+            "Photos": "folder-multiple-image",
+        }
+
+        for item in data.items():
+            bottom_sheet_menu.add_item(
+                item[0],
+                lambda x, y=item[0]: self.callback_for_menu_items(y),
+                icon_src=item[1],
+            )
+        bottom_sheet_menu.open()
+
     messages = ListProperty()
 
     def add_message(self, text, side, color):

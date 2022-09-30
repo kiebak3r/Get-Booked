@@ -323,7 +323,7 @@ ScreenManager:
                 icon: "folder-multiple-image"
                 icon_size: "64sp"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                # on_release:  
+                on_release: app.show_example_grid_bottom_sheet()
 
             MDIconButton:
                 icon: "send-circle"
