@@ -67,6 +67,14 @@ ScreenManager:
         theme_icon_color: "Custom"
         icon_color: "black"
         on_release: app.user_login_lookup()
+    
+    MDCheckbox:
+        id: remember_me
+        group: 'group'
+        size_hint: None,None
+        size: "48dp", "48dp"
+        pos_hint: {'center_x': .2, 'center_y': .22}
+        on_active: app.remember_me(*args)
 
     MDTextButton:
         text: "Create an account"

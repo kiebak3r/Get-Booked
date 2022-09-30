@@ -208,6 +208,10 @@ class Profile(Screen):
 
 
 class SignIn(Screen):
+    def remember_me(self, value):
+        if value:
+            pass  # add way to skip sign in screen
+
     def reset_input_field(self):
         self.root.get_screen('sign_in').ids.username.text = ""
         self.root.get_screen('sign_in').ids.password.text = ""
