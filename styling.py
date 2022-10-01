@@ -11,6 +11,7 @@ screen_manager.add_widget(SignIn(name="sign_in"))
 screen_manager.add_widget(SignUp(name="sign_up"))
 screen_manager.add_widget(Chat(name="chat"))
 screen_manager.add_widget(Chat(name="schedule"))
+screen_manager.add_widget(Chat(name="calendar"))
 
 styling = """
 #:import RGBA kivy.utils.rgba
@@ -23,7 +24,42 @@ ScreenManager:
     Profile:
     Chat:
     Schedule:
+    Calendar:
+
+<Calendar>
+    name: "calendar"
     
+    MDBoxLayout:    
+        orientation: "vertical"
+
+        MDBottomNavigation:
+            text_color_normal: 1, 1, 1, 1
+
+            MDBottomNavigationItem:
+                name: "back"
+                text: "Go back"
+                icon: "arrow-left-thick"
+                on_tab_release: root.manager.current = "profile"
+
+            MDBottomNavigationItem:
+                name: "add"
+                text: "Add"
+                icon: "plus-circle"
+                on_tab_release: root.manager.current = ""
+                
+    FloatLayout:
+        CalendarCard:
+            size_hint: 0.15, 0.3
+            text: 'Drag me'
+    
+<CalendarCard>:
+    drag_rectangle: self.x, self.y, self.width, self.height
+    radius: dp(20)
+    # elevation: 0
+    drag_timeout: 10000000
+    drag_distance: 0
+    
+            
 <Schedule>
     name: "schedule"
             
@@ -66,8 +102,17 @@ ScreenManager:
     name: "sign_in"
 
     MDFloatLayout:
-        ElementCard:
-            image: "media/logo.png"
+        id: logo
+        pos_hint: {"center_x": .5, "center_y": .6}      
+        canvas:
+            Color:
+                rgb: 1, 1, 1          
+            Ellipse:
+                source: "media/logo.png"
+                pos: [self.center_x - 305/3, self.center_y - 100/3]
+                size: 200, 200
+                angle_start: 0
+                angle_end: 360
 
     MDLabel: 
         text: "catchy slogan here.."
@@ -261,6 +306,7 @@ ScreenManager:
         line_color: "black"
         theme_icon_color: "Custom"
         icon_color: "black"
+        on_release: root.manager.current = "calendar"
 
     MDRectangleFlatIconButton:
         text: " My Messages"
@@ -323,17 +369,17 @@ ScreenManager:
 
 <Chat>
     name: "chat"
-
+                
     BoxLayout:
         orientation: 'vertical'
         padding: dp(5), dp(5)
-
+        
         RecycleView:
             id: rv
             data: app.messages
             viewclass: 'Message'
             do_scroll_x: False
-
+            
             RecycleBoxLayout:
                 id: box
                 orientation: 'vertical'
@@ -343,7 +389,7 @@ ScreenManager:
                 # magic value for the default height of the message
                 default_size: 0, 39
                 key_size: '_size'
-
+                
         BoxLayout:
             size_hint: 1, None
             size: self.minimum_size
@@ -370,12 +416,12 @@ ScreenManager:
                 icon_size: "64sp"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 on_release: app.send_message(ti)  
-
+    
     MDIconButton:
         icon: "arrow-left"
         icon_size: "64sp"
         pos_hint: {'center_x': 0.0999, 'center_y': 0.95}
-        on_release: root.manager.current = "profile" 
+        on_release: root.manager.current = "profile"     
 
 <Message@FloatLayout>:
     message_id: -1

@@ -1,4 +1,6 @@
 import os
+
+from kivy.uix.behaviors import DragBehavior
 from kivy.uix.floatlayout import FloatLayout
 from kivymd.toast import toast
 from kivymd.uix.bottomsheet import MDGridBottomSheet
@@ -408,7 +410,7 @@ class Schedule(Screen):
     def __init__(self, **kw):
         super().__init__(**kw)
         self.date = None
-        self.title = None
+        self.event_title = None
         self.details = None
         self.start = None
         self.end = None
@@ -450,7 +452,7 @@ class Schedule(Screen):
             for event in events:
                 try:
                     try:
-                        self.title = event['summary']
+                        self.event_title = event['summary']
                     except KeyError:
                         pass
 
@@ -474,7 +476,7 @@ class Schedule(Screen):
                     except KeyError:
                         pass
 
-                    if self.title is not None:
+                    if self.event_title is not None:
                         user_prompt = MDDialog(
                             title=f"Actions menu",
                             buttons=[MDFlatButton(text="Close",
@@ -483,7 +485,7 @@ class Schedule(Screen):
                                                   on_release=lambda x: user_prompt.dismiss())])
 
                         self.root.get_screen('schedule').ids.container.add_widget(
-                            TwoLineListItem(text=self.title,
+                            TwoLineListItem(text=self.event_title,
                                             secondary_text=f"{self.date} at {self.start} - {self.end}",
                                             on_release=lambda x: user_prompt.open()
                                             )
@@ -496,3 +498,11 @@ class Schedule(Screen):
 
         except HttpError:
             pass
+
+
+class Calendar(Screen):
+    pass
+
+
+class CalendarCard(DragBehavior, MDCard):
+    pass
