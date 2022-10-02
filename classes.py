@@ -1,5 +1,4 @@
 import os
-
 from kivy.uix.behaviors import DragBehavior
 from kivy.uix.floatlayout import FloatLayout
 from kivymd.toast import toast
@@ -32,7 +31,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+SCOPES = ['https://www.googleapis.com/auth/calendar']
 database = 'misc/getbooked.db'
 
 
@@ -409,14 +408,23 @@ class SignUp(Screen):
 class Schedule(Screen):
     def __init__(self, **kw):
         super().__init__(**kw)
+        self.user_prompt = None
+        self.event_id = None
         self.date = None
         self.event_title = None
         self.details = None
         self.start = None
         self.end = None
+        self.service = None
 
     def clear_appointments(self):
         self.root.get_screen('schedule').ids.container.clear_widgets()
+
+    def delete_appointment(self):
+        self.service.events().delete(calendarId='primary', eventId=self.event_id, sendUpdates='all').execute()
+        self.user_prompt.dismiss()
+        self.clear_appointments()
+        self.check_appointments()
 
     def check_appointments(self):
         creds = None
@@ -432,12 +440,12 @@ class Schedule(Screen):
             with open('misc/token.json', 'w') as token:
                 token.write(creds.to_json())
         try:
-            service = build('calendar', 'v3', credentials=creds)
+            self.service = build('calendar', 'v3', credentials=creds)
 
             now = datetime.datetime.now().isoformat() + 'Z'  # 'Z' indicates UTC time
-            events_result = service.events().list(calendarId='primary', timeMin=now,
-                                                  maxResults=10, singleEvents=True,
-                                                  orderBy='startTime').execute()
+            events_result = self.service.events().list(calendarId='primary', timeMin=now,
+                                                       maxResults=10, singleEvents=True,
+                                                       orderBy='startTime').execute()
             events = events_result.get('items', [])
 
             if not events:
@@ -453,6 +461,11 @@ class Schedule(Screen):
                 try:
                     try:
                         self.event_title = event['summary']
+                    except KeyError:
+                        pass
+
+                    try:
+                        self.event_id = event['id']
                     except KeyError:
                         pass
 
@@ -477,17 +490,17 @@ class Schedule(Screen):
                         pass
 
                     if self.event_title is not None:
-                        user_prompt = MDDialog(
+                        self.user_prompt = MDDialog(
                             title=f"Actions menu",
                             buttons=[MDFlatButton(text="Close",
-                                                  on_release=lambda x: user_prompt.dismiss()),
+                                                  on_release=lambda x: self.user_prompt.dismiss()),
                                      MDFlatButton(text="Delete",
-                                                  on_release=lambda x: user_prompt.dismiss())])
+                                                  on_release=lambda x: self.delete_appointment())])
 
                         self.root.get_screen('schedule').ids.container.add_widget(
                             TwoLineListItem(text=self.event_title,
                                             secondary_text=f"{self.date} at {self.start} - {self.end}",
-                                            on_release=lambda x: user_prompt.open()
+                                            on_release=lambda x: self.user_prompt.open()
                                             )
                         )
 
