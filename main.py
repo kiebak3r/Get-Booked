@@ -1,4 +1,6 @@
 import os, sys
+import time
+
 from kivy.resources import resource_add_path, resource_find
 from styling import *
 from classes import *

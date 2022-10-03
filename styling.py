@@ -100,7 +100,7 @@ ScreenManager:
 
 <SignIn>
     name: "sign_in"
-
+                    
     MDFloatLayout:
         id: logo
         pos_hint: {"center_x": .5, "center_y": .6}      
@@ -114,19 +114,12 @@ ScreenManager:
                 angle_start: 0
                 angle_end: 360
 
-    MDLabel: 
-        text: "catchy slogan here.."
-        font_style: "H5"
-        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        halign: "center"
-        valign: "center"
-
     MDTextField:
         id: username
         hint_text: "Username"
         icon_right: "account"
         icon_right_color: app.theme_cls.primary_color
-        pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+        pos_hint: {'center_x': 0.5, 'center_y': 0.47}
         size_hint_x: .8
         max_text_length: 14
         multiline: False
@@ -137,29 +130,46 @@ ScreenManager:
         hint_text: "Password"
         icon_right: "lock"
         icon_right_color: app.theme_cls.primary_color
-        pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+        pos_hint: {'center_x': 0.5, 'center_y': 0.37}
         size_hint_x: .8
         max_text_length: 10
         multiline: False
 
-    MDRectangleFlatIconButton:
+    Button:
         text: "Sign In"
-        icon: "arrow-right-bold"
-        pos_hint: {'center_x': 0.5, 'center_y': 0.22}
-        theme_text_color: "Custom"
-        text_color: "black"
-        line_color: "black"
-        theme_icon_color: "Custom"
-        icon_color: "black"
+        size_hint: .66, .065
+        pos_hint: {'center_x': 0.5, 'center_y': 0.28}
+        background_color: 0, 0, 0, 0
         on_release: app.user_login_lookup()
+        canvas.before:
+            Color:
+                rgb: rgba(52, 0, 231, 255)
+                
+            RoundedRectangle:
+                size: self.size
+                pos: self.pos
+                radius: [5]
     
-    MDCheckbox:
-        id: remember_me
-        group: 'group'
-        size_hint: None,None
-        size: "48dp", "48dp"
-        pos_hint: {'center_x': .2, 'center_y': .22}
-        on_active: app.remember_me(*args)
+    Button:
+        text: "Sign In With Google"
+        size_hint: .66, .065
+        pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+        background_color: 0, 0, 0, 0
+        on_release: app.user_login_lookup()
+        canvas.before:
+            Color:
+                rgb: rgba(52, 0, 231, 255)
+                
+            Line:
+                width: 1.2
+                rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
+    
+    # MDCheckbox:
+    #     id: remember_me
+    #     size_hint: None,None
+    #     size: "48dp", "48dp"
+    #     pos_hint: {'center_x': .83, 'center_y': .35}
+    #     on_active: app.remember_me(*args)
 
     MDTextButton:
         text: "Create an account"
