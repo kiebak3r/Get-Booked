@@ -134,11 +134,32 @@ ScreenManager:
         size_hint_x: .8
         max_text_length: 10
         multiline: False
+        
+    MDFloatLayout:  
+        MDLabel:
+            text: "Remember me"
+            halign: "center"
+            pos_hint: {'center_x': .28, 'center_y': .3} 
+            font_style: "Overline"
+        
+        MDLabel:
+            text: "Forgot password"
+            halign: "center"
+            pos_hint: {'center_x': .72, 'center_y': .3} 
+            font_style: "Overline"
+        
+        MDCheckbox:
+            id: remember_me
+            size: "48dp", "48dp"
+            size_hint: None,None
+            hint_text: "Remember me"
+            on_active: app.remember_me(*args)
+            pos_hint: {'center_x': .12, 'center_y': .3}  
 
     Button:
         text: "Sign In"
         size_hint: .66, .065
-        pos_hint: {'center_x': 0.5, 'center_y': 0.28}
+        pos_hint: {'center_x': 0.5, 'center_y': 0.22}
         background_color: 0, 0, 0, 0
         on_release: app.user_login_lookup()
         canvas.before:
@@ -153,7 +174,7 @@ ScreenManager:
     Button:
         text: "Sign In With Google"
         size_hint: .66, .065
-        pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+        pos_hint: {'center_x': 0.5, 'center_y': 0.15}
         background_color: 0, 0, 0, 0
         on_release: app.user_login_lookup()
         canvas.before:
@@ -174,7 +195,7 @@ ScreenManager:
     MDTextButton:
         text: "Create an account"
         font_style: "Subtitle2"
-        pos_hint: {'center_x': 0.5, 'center_y': 0.15}
+        pos_hint: {'center_x': 0.5, 'center_y': 0.08}
         on_press: root.manager.current = "sign_up"
 
 <SignUp>
@@ -340,6 +361,7 @@ ScreenManager:
         theme_icon_color: "Custom"
         icon_color: "black"
         on_release: root.manager.current = "sign_in"
+        on_release: app.sign_out_settings_fix()
 
     MDTextButton:
         text: "Delete account"

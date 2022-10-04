@@ -1,3 +1,4 @@
+import configparser
 import os
 from kivy.uix.behaviors import DragBehavior
 from kivy.uix.floatlayout import FloatLayout
@@ -232,9 +233,49 @@ class Profile(Screen):
 
 
 class SignIn(Screen):
-    def remember_me(self, checkbox, value):
-        if value:
-            pass  # add way to skip sign in screen
+    def remember_me(self, value, checkbox):
+        if checkbox:
+            username = self.root.get_screen('sign_in').ids.username.text
+            global config
+            config = configparser.ConfigParser()
+            config.read('misc/settings.ini')
+            config.set('PROFILE_SETTINGS', 'remember_me', 'True')
+            config.set('PROFILE_SETTINGS', 'last_user', f'{username}')
+            pass
+        if not checkbox:
+            config = configparser.ConfigParser()
+            config.read('misc/settings.ini')
+            config.set('PROFILE_SETTINGS', 'remember_me', 'False')
+            config.set('PROFILE_SETTINGS', 'last_user', '')
+            with open('misc/settings.ini', 'w') as configfile:
+                config.write(configfile)
+                configfile.close()
+            pass
+
+    def write_to_settings(self):
+        with open('misc/settings.ini', 'w') as configfile:
+            config.write(configfile)
+            configfile.close()
+
+    def sign_out_settings_fix(self):
+        config = configparser.ConfigParser()
+        config.read('misc/settings.ini')
+        config.set('PROFILE_SETTINGS', 'remember_me', 'False')
+        config.set('PROFILE_SETTINGS', 'last_user', '')
+        with open('misc/settings.ini', 'w') as configfile:
+            config.write(configfile)
+            configfile.close()
+
+    def skip_login(self):
+        config = configparser.ConfigParser()
+        config.read('misc/settings.ini')
+        remember_me = config['PROFILE_SETTINGS']['remember_me']
+        user = config['PROFILE_SETTINGS']['last_user']
+        if remember_me == "True" and not user == "":
+            self.root.get_screen('profile').ids.display_name.text = f"{user}'s Profile"
+            self.root.current = "profile"
+        else:
+            pass
 
     def reset_input_field(self):
         self.root.get_screen('sign_in').ids.username.text = ""
@@ -272,6 +313,7 @@ class SignIn(Screen):
                 if self.root.get_screen('sign_in').ids.password.text == query[0]:
                     self.root.get_screen('profile').ids.display_name.text = f"{username}'s Profile"
                     self.reset_input_field()
+                    self.write_to_settings()
                     self.root.current = "profile"
 
 

@@ -32,6 +32,7 @@ class GetBooked(
         return screen
 
     def on_start(self):
+        self.skip_login()
         self.root.get_screen('profile').ids.profile_pic.source = default_avatar
         self.chat_thread()
 
