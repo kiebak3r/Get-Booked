@@ -3,6 +3,7 @@ import os
 from kivy.uix.behaviors import DragBehavior
 from kivy.uix.floatlayout import FloatLayout
 from kivymd.toast import toast
+from kivyauth.google_auth import login_google, logout_google
 from kivymd.uix.bottomsheet import MDGridBottomSheet
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.card import MDCard
@@ -233,6 +234,15 @@ class Profile(Screen):
 
 
 class SignIn(Screen):
+    def google_login(self):
+        login_google()
+
+    def after_login(self):
+        pass
+
+    def error_listener(self):
+        pass
+
     def remember_me(self, value, checkbox):
         if checkbox:
             username = self.root.get_screen('sign_in').ids.username.text

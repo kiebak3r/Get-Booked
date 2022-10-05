@@ -187,7 +187,7 @@ ScreenManager:
         size_hint: .66, .065
         pos_hint: {'center_x': 0.5, 'center_y': 0.17}
         background_color: 0, 0, 0, 0
-        on_release: app.user_login_lookup()
+        on_release: app.google_login()
         canvas.before:
             Color:
                 rgb: rgba(36, 35, 36, 0.8)

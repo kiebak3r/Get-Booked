@@ -1,6 +1,5 @@
-import os, sys
-import time
-
+import os, sys, time
+from kivyauth.google_auth import initialize_google
 from kivy.resources import resource_add_path, resource_find
 from styling import *
 from classes import *
@@ -32,6 +31,13 @@ class GetBooked(
         return screen
 
     def on_start(self):
+        initialize_google(
+            SignIn.after_login,
+            SignIn.error_listener,
+            client_id=open('misc/client_id.txt').read(),
+            client_secret=open('misc/client_secret.txt').read()
+        )
+
         self.skip_login()
         self.root.get_screen('profile').ids.profile_pic.source = default_avatar
         self.chat_thread()
