@@ -242,6 +242,7 @@ class SignIn(Screen):
             config.set('PROFILE_SETTINGS', 'remember_me', 'True')
             config.set('PROFILE_SETTINGS', 'last_user', f'{username}')
             pass
+
         if not checkbox:
             config = configparser.ConfigParser()
             config.read('misc/settings.ini')

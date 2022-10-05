@@ -103,7 +103,7 @@ ScreenManager:
                     
     MDFloatLayout:
         id: logo
-        pos_hint: {"center_x": .5, "center_y": .6}      
+        pos_hint: {"center_x": .5, "center_y": .67}      
         canvas:
             Color:
                 rgb: 1, 1, 1          
@@ -119,7 +119,7 @@ ScreenManager:
         hint_text: "Username"
         icon_right: "account"
         icon_right_color: app.theme_cls.primary_color
-        pos_hint: {'center_x': 0.5, 'center_y': 0.47}
+        pos_hint: {'center_x': 0.5, 'center_y': 0.55}
         size_hint_x: .8
         max_text_length: 14
         multiline: False
@@ -130,72 +130,77 @@ ScreenManager:
         hint_text: "Password"
         icon_right: "lock"
         icon_right_color: app.theme_cls.primary_color
-        pos_hint: {'center_x': 0.5, 'center_y': 0.37}
+        pos_hint: {'center_x': 0.5, 'center_y': 0.45}
         size_hint_x: .8
         max_text_length: 10
         multiline: False
         
-    MDFloatLayout:  
+    MDFloatLayout:    
         MDLabel:
             text: "Remember me"
             halign: "center"
-            pos_hint: {'center_x': .28, 'center_y': .3} 
+            pos_hint: {'center_x': .29, 'center_y': .37} 
             font_style: "Overline"
-        
-        MDLabel:
-            text: "Forgot password"
-            halign: "center"
-            pos_hint: {'center_x': .72, 'center_y': .3} 
-            font_style: "Overline"
-        
+                
         MDCheckbox:
             id: remember_me
             size: "48dp", "48dp"
             size_hint: None,None
             hint_text: "Remember me"
             on_active: app.remember_me(*args)
-            pos_hint: {'center_x': .12, 'center_y': .3}  
+            pos_hint: {'center_x': .13, 'center_y': .37}  
 
     Button:
         text: "Sign In"
-        size_hint: .66, .065
-        pos_hint: {'center_x': 0.5, 'center_y': 0.22}
+        size_hint: .43, .055
+        pos_hint: {'center_x': .67, 'center_y': .37}
         background_color: 0, 0, 0, 0
         on_release: app.user_login_lookup()
         canvas.before:
             Color:
-                rgb: rgba(52, 0, 231, 255)
+                rgb: rgba(36, 35, 36, 0.8)
                 
             RoundedRectangle:
                 size: self.size
                 pos: self.pos
                 radius: [5]
     
+    MDLabel:
+        text: "OR"
+        color: rgba(0, 0, 0, 255)
+        pos_hint: {"center_y": .25}
+        font_size: "13sp"
+        halign: "center"
+    
+    MDFloatLayout:
+        md_bg_color: rgba(0, 0, 0, 255)
+        size_hint: .32, .002
+        pos_hint: {"center_x": .3, "center_y": .25}
+    
+    MDFloatLayout:
+        md_bg_color: rgba(0, 0, 0, 255)
+        size_hint: .32, .002
+        pos_hint: {"center_x": .7, "center_y": .25}
+    
     Button:
         text: "Sign In With Google"
         size_hint: .66, .065
-        pos_hint: {'center_x': 0.5, 'center_y': 0.15}
+        pos_hint: {'center_x': 0.5, 'center_y': 0.17}
         background_color: 0, 0, 0, 0
         on_release: app.user_login_lookup()
         canvas.before:
             Color:
-                rgb: rgba(52, 0, 231, 255)
+                rgb: rgba(36, 35, 36, 0.8)
                 
-            Line:
-                width: 1.2
-                rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
-    
-    # MDCheckbox:
-    #     id: remember_me
-    #     size_hint: None,None
-    #     size: "48dp", "48dp"
-    #     pos_hint: {'center_x': .83, 'center_y': .35}
-    #     on_active: app.remember_me(*args)
-
+            RoundedRectangle:
+                size: self.size
+                pos: self.pos
+                radius: [5]
+                    
     MDTextButton:
         text: "Create an account"
         font_style: "Subtitle2"
-        pos_hint: {'center_x': 0.5, 'center_y': 0.08}
+        pos_hint: {'center_x': 0.5, 'center_y': 0.12}
         on_press: root.manager.current = "sign_up"
 
 <SignUp>
@@ -257,19 +262,22 @@ ScreenManager:
         size_hint_x: .8
         max_text_length: 10
         multiline: False
-
-    MDRectangleFlatIconButton:
+    
+    Button:
         text: "Create Account"
-        icon: "plus-thick"
+        size_hint: .66, .065
         pos_hint: {'center_x': 0.5, 'center_y': 0.3}
-        theme_text_color: "Custom"
-        text_color: "black"
-        line_color: "black"
-        theme_icon_color: "Custom"
-        icon_color: "black"
+        background_color: 0, 0, 0, 0
         on_release: app.add_user_to_database()
-
-
+        canvas.before:
+            Color:
+                rgb: rgba(36, 35, 36, 0.8)
+                
+            RoundedRectangle:
+                size: self.size
+                pos: self.pos
+                radius: [5]
+                
 <Profile>
     name: "profile"
 
